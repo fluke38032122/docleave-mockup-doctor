@@ -32,6 +32,8 @@ function attachBack(w){
  if(!yes.includes(key))return;
  const page=d.querySelector('.page')||d.body;
  const style=d.createElement('style');style.textContent=backCSS;d.head.append(style);
+ // Match the approved form sample: remove only its old home button.
+ if(role==='doctor'&&['19','20'].includes(key))d.querySelector('[data-el="19"]')?.remove();
  page.classList.add('page','back-bottom');
  const sheet=role==='approver'?d.querySelector('.day-sheet'):null;
  (sheet||page).insertAdjacentHTML('beforeend',backMarkup);
