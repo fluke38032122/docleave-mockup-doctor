@@ -9,7 +9,8 @@ const homes={doctor:'hub',approver:'16',admin:'49'};
 const auth=['01','02','03','04','28','33'];
 const previous=role==='doctor'?{'19':'hub','20':'hub','21':'hub','22':'hub','23':'21','24':'19','25':'19','26':'19','27':'19'}:{'17-detail':'17-list'};
 const yes=role==='doctor'?['19','20','21','22','23','24','25','26','27']:role==='approver'?['17-detail']:[];
-const submittedForms=new Set();
+const submittedForms=new Set(),submittedDrafts=new Set();
+function draftIdentity(d){return JSON.stringify(['type','firstDay','lastDay','reason'].map(id=>d.getElementById(id)?.value||''));}
 let navState,navSession,navEntries=[];
 function navURL(key){const u=new URL(location.href);u.searchParams.set('screen',key);return u;}
 function showScreen(key,replace=false){
@@ -57,7 +58,7 @@ function renderScreen(key){clearTimeout(timer);if(typeof remember==='function')r
  const doc=frame.contentDocument;doc.open();doc.write(screens[key]);doc.close();}
 function attachMock(w){const d=w.document,key=w.mockScreen;attachBack(w);
  if(drafts[key])for(const [id,value]of Object.entries(drafts[key])){const e=d.getElementById(id);if(e)e.value=value;}
- if(submittedForms.has(key)){const submit=d.getElementById('submit');if(submit){submit.disabled=true;submit.setAttribute('aria-disabled','true');}w.setState?.({pressed:true});}const type=d.getElementById('type');if(type)type.dataset.previous=type.value;
+ if(submittedForms.has(key)||(['19','20'].includes(key)&&submittedDrafts.has(draftIdentity(d)))){const submit=d.getElementById('submit');if(submit){submit.disabled=true;submit.setAttribute('aria-disabled','true');}w.setState?.({pressed:true});}const type=d.getElementById('type');if(type)type.dataset.previous=type.value;
  // Fixed approved width; adapt only the scrolling viewport to actual phone height.
  if(['hub','19','20','21','22'].includes(key)&&w.innerHeight!==844){const style=d.createElement('style');style.textContent='.page{height:100dvh!important}';d.head.append(style);}
  d.addEventListener('click',e=>{const el=e.target.closest('button,a');if(!el)return;const text=el.textContent.trim(),id=el.id;e.preventDefault();e.stopImmediatePropagation();if(el.disabled||el.getAttribute('aria-disabled')==='true')return;
@@ -70,7 +71,7 @@ function attachMock(w){const d=w.document,key=w.mockScreen;attachBack(w);
  if(text==='ยื่นคำขอลา'){showScreen('19');return;}
  if(id==='normal'){showScreen('19');return;}
  if(id==='emergency'){showScreen('20');return;}
- if(id==='submit'){submittedForms.add(key);showScreen(SUBMIT_RESULT);return;}
+ if(id==='submit'){if(submittedDrafts.has(draftIdentity(d)))return;submittedDrafts.add(draftIdentity(d));submittedForms.add(key);showScreen(SUBMIT_RESULT);return;}
  if(text==='แสดงใบรับ'){showScreen('23');return;}
  if(text==='ยกเลิกคำขอ')return;
  if(id==='sheet-close'){closeSheet('13');return;}
