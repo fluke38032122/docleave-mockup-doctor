@@ -66,7 +66,8 @@ function attachMock(w){const d=w.document,key=w.mockScreen;attachBack(w);
  if(id==='continue'){showScreen('hub');return;}
  if(id==='homeLink'||id==='expiryFallback'){showScreen('01');return;}
  if(text==='ปฏิทินการลา'){showScreen('13');return;}
- if(text==='การลาของฉัน'||text==='คำขอลาของฉัน'){showScreen('21');return;}
+ if(text==='การลาของฉัน'){showScreen('hub');return;}
+ if(text==='คำขอลาของฉัน'){showScreen('21');return;}
  if(text==='กลับหน้าหลัก'){goBack();return;}
  if(text==='ยื่นคำขอลา'){showScreen('19');return;}
  if(id==='normal'){showScreen('19');return;}
