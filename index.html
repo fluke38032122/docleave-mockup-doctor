@@ -58,7 +58,7 @@ function renderScreen(key){clearTimeout(timer);if(typeof remember==='function')r
  const doc=frame.contentDocument;doc.open();doc.write(screens[key]);doc.close();}
 function attachMock(w){const d=w.document,key=w.mockScreen;attachBack(w);
  if(drafts[key])for(const [id,value]of Object.entries(drafts[key])){const e=d.getElementById(id);if(e)e.value=value;}
- if(submittedForms.has(key)||(['19','20'].includes(key)&&submittedDrafts.has(draftIdentity(d)))){const submit=d.getElementById('submit');if(submit){submit.disabled=true;submit.setAttribute('aria-disabled','true');}w.setState?.({pressed:true});}const type=d.getElementById('type');if(type)type.dataset.previous=type.value;
+ if(submittedForms.has(key)||(['19','20'].includes(key)&&submittedDrafts.has(draftIdentity(d)))){const submit=d.getElementById('submit');if(submit){submit.disabled=true;submit.setAttribute('aria-disabled','true');}w.setState?.({pressed:true});}const disabledSendStyle=d.createElement('style');disabledSendStyle.textContent='#submit:disabled{cursor:wait;background:#425563!important;color:white!important}';d.head.append(disabledSendStyle);const type=d.getElementById('type');if(type)type.dataset.previous=type.value;
  // Fixed approved width; adapt only the scrolling viewport to actual phone height.
  if(['hub','19','20','21','22'].includes(key)&&w.innerHeight!==844){const style=d.createElement('style');style.textContent='.page{height:100dvh!important}';d.head.append(style);}
  d.addEventListener('click',e=>{const el=e.target.closest('button,a');if(!el)return;const text=el.textContent.trim(),id=el.id;e.preventDefault();e.stopImmediatePropagation();if(el.disabled||el.getAttribute('aria-disabled')==='true')return;
